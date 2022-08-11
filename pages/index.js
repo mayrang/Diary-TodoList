@@ -3,18 +3,13 @@ import HeaderLayout from "../components/HeaderLayout"
 import {Button, Select} from 'antd';
 import {RightOutlined, LeftOutlined} from '@ant-design/icons';
 import moment from 'moment';
-import styled from 'styled-components';
 import DiaryCard from '../components/DiaryCard';
-import { dummyDiary } from '../reducer/diary';
+import {LOAD_DIARY_POSTS } from '../reducers/diary';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 
 
-
-const SelectWrapper = styled(Select)`
-
-    margin: 1rem;
-`
 
 
 const Home = () => {
@@ -22,20 +17,26 @@ const Home = () => {
     const [year, setYear] = useState(parseInt(moment().format('YYYY')));
     const [sorted, setSorted] = useState("latest");
     const [sortedPosts, setSortedPosts] = useState([]);
+    const dispatch = useDispatch();
+    const {diaryPosts} = useSelector((state) => state.diary);
 
     useEffect(() => {
-        const copyPosts = [...dummyDiary]
+        const copyPosts = [...diaryPosts]
         console.log(sorted)
         if(sorted === 'latest'){
             setSortedPosts(copyPosts.sort((a, b) => parseInt(b.diaryDate.slice(-2)) - parseInt(a.diaryDate.slice(-2))));
         }else{
             setSortedPosts(copyPosts.sort((a, b) => parseInt(a.diaryDate.slice(-2)) - parseInt(b.diaryDate.slice(-2))));
         }
-    }, [sorted])
+    }, [sorted, diaryPosts])
 
     useEffect(() => {
-        console.log(sortedPosts)
-    }, [sortedPosts])
+        dispatch({
+            type: LOAD_DIARY_POSTS,
+            year: year,
+            month: month
+        })
+    }, [month, year])
 
     const clickPrev = useCallback(() => {
         if(month === 1){
@@ -68,14 +69,15 @@ const Home = () => {
         ]} 
         title={"Diary"}
         subTitle={`${year}년 ${month}월`}/>
-        <SelectWrapper
+        <Select
+            style={{margin: "1rem"}}
             onChange={handleSelectChange}
             defaultValue={"latest"}
             
         >
             <Select.Option value="latest">최신 순</Select.Option>
             <Select.Option value="oldest">오래된 순</Select.Option>
-        </SelectWrapper>
+        </Select>
         {sortedPosts&&sortedPosts.map((it) => (
             <DiaryCard post={it} key={it.id} />
         ))}
