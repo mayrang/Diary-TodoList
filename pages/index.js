@@ -4,6 +4,7 @@ import {Button, Select} from 'antd';
 import {RightOutlined, LeftOutlined} from '@ant-design/icons';
 import moment from 'moment';
 import styled from 'styled-components';
+import DiaryCard from '../components/DiaryCard';
 
 
 const dummyDiary = [
@@ -48,8 +49,7 @@ const dummyDiary = [
 
 
 const SelectWrapper = styled(Select)`
-    display: inline-block;
-    float: right;
+
     margin: 1rem;
 `
 
@@ -57,16 +57,22 @@ const SelectWrapper = styled(Select)`
 const Home = () => {
     const [month, setMonth] = useState(parseInt(moment().format('MM')));
     const [year, setYear] = useState(parseInt(moment().format('YYYY')));
-    const [sorted, setSorted] = useState("newest");
+    const [sorted, setSorted] = useState("latest");
     const [sortedPosts, setSortedPosts] = useState([]);
 
     useEffect(() => {
-        if(sorted === 'newest'){
-            setSortedPosts(dummyDiary.sort((a, b) => parseInt(b.diaryDate.slice(-2)) - parseInt(a.diaryDate.slice(-2))));
+        const copyPosts = [...dummyDiary]
+        console.log(sorted)
+        if(sorted === 'latest'){
+            setSortedPosts(copyPosts.sort((a, b) => parseInt(b.diaryDate.slice(-2)) - parseInt(a.diaryDate.slice(-2))));
         }else{
-            setSortedPosts(dummyDiary.sort((a, b) => parseInt(a.diaryDate.slice(-2)) - parseInt(b.diaryDate.slice(-2))));
+            setSortedPosts(copyPosts.sort((a, b) => parseInt(a.diaryDate.slice(-2)) - parseInt(b.diaryDate.slice(-2))));
         }
     }, [sorted])
+
+    useEffect(() => {
+        console.log(sortedPosts)
+    }, [sortedPosts])
 
     const clickPrev = useCallback(() => {
         if(month === 1){
@@ -101,11 +107,15 @@ const Home = () => {
         subTitle={`${year}년 ${month}월`}/>
         <SelectWrapper
             onChange={handleSelectChange}
-            value={sorted}
+            defaultValue={"latest"}
+            
         >
             <Select.Option value="latest">최신 순</Select.Option>
             <Select.Option value="oldest">오래된 순</Select.Option>
         </SelectWrapper>
+        {sortedPosts&&sortedPosts.map((it) => (
+            <DiaryCard post={it} key={it.id} />
+        ))}
         </>
     );
 };
