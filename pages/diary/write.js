@@ -49,7 +49,7 @@ const DiaryWrite = () => {
         if(selectedTags.length > 0){
             dispatch({
                 type: ADD_DIARY_POST_REQUEST, 
-                data:  {...value, diaryTags: selectedTags}
+                data:  {...value, diaryDate: moment().format('YYYY-MM-DD'),diaryTags: selectedTags}
             });
         }else{
             alert("오늘 날씨를 입력해주세요")

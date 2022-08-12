@@ -1,14 +1,20 @@
 import { Card, Col, Rate, Row, Tag, PageHeader } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { END } from 'redux-saga';
+import { useSelector, useDispatch } from 'react-redux';
 import {LOAD_DIARY_POST_REQUEST } from '../../reducers/diary';
-import wrapper from '../../store/configureStore';
 
 const DiaryPost = () => {
     const {singlePost, loadDiaryPostError} = useSelector((state) => state.diary);
     const router = useRouter();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch({
+            type: LOAD_DIARY_POST_REQUEST,
+            id: router.query.id
+        });
+    }, []);
 
     useEffect(() => {
         if(loadDiaryPostError){
@@ -22,7 +28,7 @@ const DiaryPost = () => {
     const clickBack = useCallback(() => {
         router.back();
     }, []);
-    
+
     return (
 
         <>
@@ -56,15 +62,5 @@ const DiaryPost = () => {
         </>
     );
 };
-
-export const getServerSideProps = wrapper.getServerSideProps((store) => async ({params}) => {
-    store.dispatch({
-        type: LOAD_DIARY_POST_REQUEST,
-        id: params.id
-    });
-    store.dispatch(END);
-    await store.sagaTask.toPromise();
-
-});
 
 export default DiaryPost;
