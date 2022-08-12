@@ -3,11 +3,21 @@ import produce from "immer";
 const initialState = {
     diaryPosts: [],
     singlePost: {},
+    loadDiaryPostsLoading: false,
+    loadDiaryPostsDone: false,
+    loadDiaryPostsError: null,
+    loadDiaryPostLoading: false,
+    loadDiaryPostDone: false,
+    loadDiaryPostError: null,
 
 }
 
-export const LOAD_DIARY_POSTS = "LOAD_DIARY_POSTS";
-export const LOAD_DIARY_POST = "LOAD_DIARY_POST";
+export const LOAD_DIARY_POSTS_REQUEST = "LOAD_DIARY_POSTS_REQUEST";
+export const LOAD_DIARY_POSTS_SUCCESS = "LOAD_DIARY_POSTS_SUCCESS";
+export const LOAD_DIARY_POSTS_FAILURE = "LOAD_DIARY_POSTS_FAILURE";
+export const LOAD_DIARY_POST_REQUEST = "LOAD_DIARY_POST_REQUEST";
+export const LOAD_DIARY_POST_SUCCESS = "LOAD_DIARY_POST_SUCCESS";
+export const LOAD_DIARY_POST_FAILURE = "LOAD_DIARY_POST_FAILURE";
 
 export const dummyDiary = [
     {
@@ -87,17 +97,35 @@ export const dummyDiary = [
 const reducer = (state=initialState, action) => {
     return produce(state, (draft => {
         switch(action.type){
-            case LOAD_DIARY_POSTS:{
-                const yearMonth = `${action.year}-${parseInt(action.month) > 10 ? action.month : ("0" + action.month)}`;
-                const monthPosts = dummyDiary.filter((it) => it.diaryDate.slice(0, 7) === yearMonth);
-                draft.diaryPosts = monthPosts;
+            case LOAD_DIARY_POSTS_REQUEST:
+                draft.loadDiaryPostsLoading = true;
+                draft.loadDiaryPostsDone = false;
+                draft.loadDiaryPostsError = null;
                 break;
-            }
-            case LOAD_DIARY_POST:{
-                const singlePost = dummyDiary.find((it) => it.id === parseInt(action.id));
-                draft.singlePost = singlePost;
+            case LOAD_DIARY_POSTS_SUCCESS:
+                draft.loadDiaryPostsLoading = false;
+                draft.loadDiaryPostsDone = true;
+                draft.diaryPosts = action.data;
                 break;
-            }  
+            case LOAD_DIARY_POSTS_FAILURE:
+                draft.loadDiaryPostsLoading = false;
+                draft.loadDiaryPostsError = action.error;
+                break;
+            case LOAD_DIARY_POST_REQUEST:
+                
+                draft.loadDiaryPostLoading = true;
+                draft.loadDiaryPostDone = false;
+                draft.loadDiaryPostError = null;
+                break;
+            case LOAD_DIARY_POST_SUCCESS:
+                draft.loadDiaryPostLoading = false;
+                draft.loadDiaryPostDone = true;
+                draft.singlePost = action.data;
+                break;
+            case LOAD_DIARY_POST_FAILURE:
+                draft.loadDiaryPostLoading = false;
+                draft.loadDiaryPostError = action.error;
+                break;
             default:
                 break;
         }

@@ -4,7 +4,7 @@ import {Button, Select} from 'antd';
 import {RightOutlined, LeftOutlined} from '@ant-design/icons';
 import moment from 'moment';
 import DiaryCard from '../components/DiaryCard';
-import {LOAD_DIARY_POSTS } from '../reducers/diary';
+import {LOAD_DIARY_POSTS_REQUEST } from '../reducers/diary';
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -32,7 +32,7 @@ const Home = () => {
 
     useEffect(() => {
         dispatch({
-            type: LOAD_DIARY_POSTS,
+            type: LOAD_DIARY_POSTS_REQUEST,
             year: year,
             month: month
         })

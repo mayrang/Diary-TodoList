@@ -1,18 +1,31 @@
 import { Card, Col, Rate, Row, Tag, PageHeader } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { LOAD_DIARY_POST } from '../../reducers/diary';
+import { END } from 'redux-saga';
+import {LOAD_DIARY_POST_REQUEST } from '../../reducers/diary';
 import wrapper from '../../store/configureStore';
 
 const DiaryPost = () => {
-    const {singlePost} = useSelector((state) => state.diary);
+    const {singlePost, loadDiaryPostError} = useSelector((state) => state.diary);
     const router = useRouter();
+
+    useEffect(() => {
+        if(loadDiaryPostError){
+            alert(loadDiaryPostError);
+            router.replace('/')
+        }
+            
+       
+    }, [loadDiaryPostError])
 
     const clickBack = useCallback(() => {
         router.back();
     }, []);
     return (
+
+        <>
+        {JSON.stringify(singlePost) !== '{}'&&
         <>
         <PageHeader
         className='site-page-header'
@@ -38,15 +51,19 @@ const DiaryPost = () => {
                 </Col>
             </Row>
         </Card>
+        </>}
         </>
     );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => ({params}) => {
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({params}) => {
     store.dispatch({
-        type: LOAD_DIARY_POST,
+        type: LOAD_DIARY_POST_REQUEST,
         id: params.id
     });
+    store.dispatch(END);
+    await store.sagaTask.toPromise();
+
 });
 
 export default DiaryPost;
