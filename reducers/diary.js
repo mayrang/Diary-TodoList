@@ -9,6 +9,9 @@ const initialState = {
     loadDiaryPostLoading: false,
     loadDiaryPostDone: false,
     loadDiaryPostError: null,
+    addDiaryPostLoading: false,
+    addDiaryPostDone: false,
+    addDiaryPostError: null,
 
 }
 
@@ -18,6 +21,9 @@ export const LOAD_DIARY_POSTS_FAILURE = "LOAD_DIARY_POSTS_FAILURE";
 export const LOAD_DIARY_POST_REQUEST = "LOAD_DIARY_POST_REQUEST";
 export const LOAD_DIARY_POST_SUCCESS = "LOAD_DIARY_POST_SUCCESS";
 export const LOAD_DIARY_POST_FAILURE = "LOAD_DIARY_POST_FAILURE";
+export const ADD_DIARY_POST_REQUEST = "ADD_DIARY_POST_REQUEST";
+export const ADD_DIARY_POST_SUCCESS = "ADD_DIARY_POST_SUCCESS";
+export const ADD_DIARY_POST_FAILURE = "ADD_DIARY_POST_FAILURE";
 
 export const dummyDiary = [
     {
@@ -125,6 +131,19 @@ const reducer = (state=initialState, action) => {
             case LOAD_DIARY_POST_FAILURE:
                 draft.loadDiaryPostLoading = false;
                 draft.loadDiaryPostError = action.error;
+                break;
+            case ADD_DIARY_POST_REQUEST:
+                draft.addDiaryPostLoading = true;
+                draft.addDiaryPostDone = false;
+                draft.addDiaryPostError = null;
+                break;
+            case ADD_DIARY_POST_SUCCESS:
+                draft.addDiaryPostLoading = false;
+                draft.addDiaryPostDone = true;
+                break;
+            case ADD_DIARY_POST_FAILURE:
+                draft.addDiaryPostLoading = false;
+                draft.addDiaryPostError = action.error;
                 break;
             default:
                 break;

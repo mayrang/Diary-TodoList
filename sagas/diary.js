@@ -1,5 +1,5 @@
 import { all, fork, put, takeLatest } from "redux-saga/effects";
-import { dummyDiary, LOAD_DIARY_POSTS_FAILURE, LOAD_DIARY_POSTS_REQUEST, LOAD_DIARY_POSTS_SUCCESS, LOAD_DIARY_POST_FAILURE, LOAD_DIARY_POST_REQUEST, LOAD_DIARY_POST_SUCCESS } from "../reducers/diary";
+import { ADD_DIARY_POST_FAILURE, ADD_DIARY_POST_REQUEST, ADD_DIARY_POST_SUCCESS, dummyDiary, LOAD_DIARY_POSTS_FAILURE, LOAD_DIARY_POSTS_REQUEST, LOAD_DIARY_POSTS_SUCCESS, LOAD_DIARY_POST_FAILURE, LOAD_DIARY_POST_REQUEST, LOAD_DIARY_POST_SUCCESS } from "../reducers/diary";
 
 
 function* watchLoadDiaryPosts(){
@@ -49,9 +49,43 @@ function* loadDiaryPost(action){
     }
 }
 
+function* watchAddDiaryPost(){
+    yield takeLatest(ADD_DIARY_POST_REQUEST, addDiaryPost);
+}
+
+function* addDiaryPost(action){
+    try{
+        console.log(action.data)
+        const localData = localStorage.getItem("Diary");
+        if(localData){
+            const jsonLocalData = JSON.parse(localData);
+            const diaryId = jsonLocalData[jsonLocalData.length - 1].id + 1;
+            const postData = {id: diaryId, ...action.data}
+            const totalData = [...jsonLocalData, postData];
+            localStorage.setItem("Diary", JSON.stringify(totalData));
+        }else{
+            const postData = {id: 1, ...action.data};
+            localStorage.setItem("Diary", JSON.stringify([postData]))
+        }
+        
+
+        yield put({
+            type: ADD_DIARY_POST_SUCCESS,
+        });
+
+    }catch(err){
+        console.error(err);
+        yield put({
+            type: ADD_DIARY_POST_FAILURE,
+            error: err.message
+        })
+    }
+}
+
 export default function* diarySaga(){
     yield all([
         fork(watchLoadDiaryPosts),
-        fork(watchLoadDiaryPost)
+        fork(watchLoadDiaryPost),
+        fork(watchAddDiaryPost),
     ])
 }

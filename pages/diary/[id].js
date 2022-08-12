@@ -22,6 +22,7 @@ const DiaryPost = () => {
     const clickBack = useCallback(() => {
         router.back();
     }, []);
+    
     return (
 
         <>

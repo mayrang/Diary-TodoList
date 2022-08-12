@@ -6,9 +6,7 @@ import moment from 'moment';
 import DiaryCard from '../components/DiaryCard';
 import {LOAD_DIARY_POSTS_REQUEST } from '../reducers/diary';
 import { useDispatch, useSelector } from 'react-redux';
-
-
-
+import { useRouter } from 'next/router';
 
 
 
@@ -19,6 +17,7 @@ const Home = () => {
     const [sortedPosts, setSortedPosts] = useState([]);
     const dispatch = useDispatch();
     const {diaryPosts} = useSelector((state) => state.diary);
+    const router = useRouter()
 
     useEffect(() => {
         const copyPosts = [...diaryPosts]
@@ -56,6 +55,10 @@ const Home = () => {
         }
     }, [month]);
 
+    const clickWrite = useCallback(() => {
+        router.push('/diary/write');
+    }, []);
+
     const handleSelectChange = useCallback((value) => {
         setSorted(value);
     }, [])
@@ -64,8 +67,9 @@ const Home = () => {
         <>
         <HeaderLayout 
         extra={[
-            <Button key="prev" onClick={clickPrev}><LeftOutlined /> 저번 달 일기</Button>,
-            <Button key="next" onClick={clickNext}><RightOutlined /> 다음 달 일기</Button>
+            <Button key="write" type='primary' onClick={clickWrite} style={{marginRight: '1.5rem'}}>일기 쓰기</Button>,
+            <Button key="prev" onClick={clickPrev}><LeftOutlined /> 저번 달</Button>,
+            <Button key="next" onClick={clickNext} ><RightOutlined /> 다음 달</Button>
         ]} 
         title={"Diary"}
         subTitle={`${year}년 ${month}월`}/>
