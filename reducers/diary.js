@@ -12,6 +12,9 @@ const initialState = {
     addDiaryPostLoading: false,
     addDiaryPostDone: false,
     addDiaryPostError: null,
+    removeDiaryPostLoading: false,
+    removeDiaryPostDone: false,
+    removeDiaryPostError: null,
 
 }
 
@@ -24,6 +27,10 @@ export const LOAD_DIARY_POST_FAILURE = "LOAD_DIARY_POST_FAILURE";
 export const ADD_DIARY_POST_REQUEST = "ADD_DIARY_POST_REQUEST";
 export const ADD_DIARY_POST_SUCCESS = "ADD_DIARY_POST_SUCCESS";
 export const ADD_DIARY_POST_FAILURE = "ADD_DIARY_POST_FAILURE";
+export const REMOVE_DIARY_POST_REQUEST = "REMOVE_DIARY_POST_REQUEST";
+export const REMOVE_DIARY_POST_SUCCESS = "REMOVE_DIARY_POST_SUCCESS";
+export const REMOVE_DIARY_POST_FAILURE = "REMOVE_DIARY_POST_FAILURE";
+
 
 export const dummyDiary = [
     {
@@ -144,6 +151,19 @@ const reducer = (state=initialState, action) => {
             case ADD_DIARY_POST_FAILURE:
                 draft.addDiaryPostLoading = false;
                 draft.addDiaryPostError = action.error;
+                break;
+            case REMOVE_DIARY_POST_REQUEST:
+                draft.removeDiaryPostLoading = true;
+                draft.removeDiaryPostDone = false;
+                draft.removeDiaryPostError = null;
+                break;
+            case REMOVE_DIARY_POST_SUCCESS:
+                draft.removeDiaryPostLoading = false;
+                draft.removeDiaryPostDone = true;
+                break;
+            case REMOVE_DIARY_POST_FAILURE:
+                draft.removeDiaryPostLoading = false;
+                draft.removeDiaryPostError = action.error;
                 break;
             default:
                 break;

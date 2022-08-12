@@ -1,5 +1,5 @@
 import { all, fork, put, takeLatest } from "redux-saga/effects";
-import { ADD_DIARY_POST_FAILURE, ADD_DIARY_POST_REQUEST, ADD_DIARY_POST_SUCCESS, LOAD_DIARY_POSTS_FAILURE, LOAD_DIARY_POSTS_REQUEST, LOAD_DIARY_POSTS_SUCCESS, LOAD_DIARY_POST_FAILURE, LOAD_DIARY_POST_REQUEST, LOAD_DIARY_POST_SUCCESS } from "../reducers/diary";
+import { ADD_DIARY_POST_FAILURE, ADD_DIARY_POST_REQUEST, ADD_DIARY_POST_SUCCESS, LOAD_DIARY_POSTS_FAILURE, LOAD_DIARY_POSTS_REQUEST, LOAD_DIARY_POSTS_SUCCESS, LOAD_DIARY_POST_FAILURE, LOAD_DIARY_POST_REQUEST, LOAD_DIARY_POST_SUCCESS, REMOVE_DIARY_POST_FAILURE, REMOVE_DIARY_POST_REQUEST, REMOVE_DIARY_POST_SUCCESS } from "../reducers/diary";
 
 
 function* watchLoadDiaryPosts(){
@@ -100,10 +100,40 @@ function* addDiaryPost(action){
     }
 }
 
+function* watchRemoveDiaryPost(){
+    yield takeLatest(REMOVE_DIARY_POST_REQUEST, removeDiaryPost)
+}
+
+function* removeDiaryPost(action){
+    try{
+        console.log(123)
+        const loacalData = localStorage.getItem("Diary");
+        const jsonLocalData = JSON.parse(loacalData);
+        const findData = jsonLocalData.find((it) => it.id === parseInt(action.id));
+        if(findData){
+            const filteredData = jsonLocalData.filter((it) => it.id !== parseInt(action.id));
+            console.log(filteredData)
+            localStorage.setItem("Diary", JSON.stringify(filteredData));
+            yield put({
+                type: REMOVE_DIARY_POST_SUCCESS,
+            })
+        }else{
+            throw new Error("해당 ID의 게시글이 존재하지 않습니다.")
+        }
+    }catch(err){
+        console.error(err);
+        yield put({
+            type: REMOVE_DIARY_POST_FAILURE,
+            error: err.message
+        })
+    }
+}
+
 export default function* diarySaga(){
     yield all([
         fork(watchLoadDiaryPosts),
         fork(watchLoadDiaryPost),
         fork(watchAddDiaryPost),
+        fork(watchRemoveDiaryPost),
     ])
 }

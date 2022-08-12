@@ -1,11 +1,11 @@
-import { Card, Col, Rate, Row, Tag, PageHeader } from 'antd';
+import { Card, Col, Rate, Row, Tag, PageHeader, Button } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {LOAD_DIARY_POST_REQUEST } from '../../reducers/diary';
+import {LOAD_DIARY_POST_REQUEST, REMOVE_DIARY_POST_REQUEST } from '../../reducers/diary';
 
 const DiaryPost = () => {
-    const {singlePost, loadDiaryPostError} = useSelector((state) => state.diary);
+    const {singlePost, loadDiaryPostError, removeDiaryPostError, removeDiaryPostDone} = useSelector((state) => state.diary);
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -17,13 +17,26 @@ const DiaryPost = () => {
     }, []);
 
     useEffect(() => {
-        if(loadDiaryPostError){
-            alert(loadDiaryPostError);
+        if(removeDiaryPostDone){
+            router.replace('/');
+        }
+    }, [removeDiaryPostDone])
+
+    useEffect(() => {
+        if(loadDiaryPostError||removeDiaryPostError){
+            alert(loadDiaryPostError||removeDiaryPostError);
             router.replace('/')
         }
             
        
-    }, [loadDiaryPostError])
+    }, [loadDiaryPostError||removeDiaryPostError]);
+
+    const clickRemove = useCallback(() => {
+        dispatch({
+            type: REMOVE_DIARY_POST_REQUEST,
+            id: router.query.id
+        })
+    }, [])
 
     const clickBack = useCallback(() => {
         router.back();
@@ -38,6 +51,7 @@ const DiaryPost = () => {
         className='site-page-header'
         onBack={clickBack}
         title={`${singlePost.diaryDate.slice(5, 7)}월 ${singlePost.diaryDate.slice(8, 10)}일의 일기`}
+        extra={<Button type={'primary'} danger onClick={clickRemove}>삭제하기</Button>}
         />
         <Card >
             <Card style={{marginBottom: "20px", fontSize: "1.3em"}}title="일기">
