@@ -75,8 +75,8 @@ function* addDiaryPost(action){
     try{
         console.log(action.data)
         const localData = localStorage.getItem("Diary");
-        if(localData){
-            const jsonLocalData = JSON.parse(localData);
+        const jsonLocalData = JSON.parse(localData);
+        if(jsonLocalData&&jsonLocalData.length > 0){
             const diaryId = jsonLocalData[jsonLocalData.length - 1].id + 1;
             const postData = {id: diaryId, ...action.data}
             const totalData = [...jsonLocalData, postData];

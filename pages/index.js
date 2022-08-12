@@ -7,6 +7,7 @@ import DiaryCard from '../components/DiaryCard';
 import {LOAD_DIARY_POSTS_REQUEST } from '../reducers/diary';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 
 
@@ -65,6 +66,11 @@ const Home = () => {
 
     return (
         <>
+        <Head>
+            <title>
+                Diary
+            </title>
+        </Head>
         <HeaderLayout 
         extra={[
             <Button key="write" type='primary' onClick={clickWrite} style={{marginRight: '1.5rem'}}>일기 쓰기</Button>,

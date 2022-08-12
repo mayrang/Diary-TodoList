@@ -1,4 +1,5 @@
 import { Card, Col, Rate, Row, Tag, PageHeader, Button } from 'antd';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -43,8 +44,13 @@ const DiaryPost = () => {
     }, []);
 
     return (
-
         <>
+        <Head>
+            <title>
+                {JSON.stringify(singlePost) !== '{}' ?
+                `${singlePost.diaryDate} 일기`: '그 날의 일기'}
+            </title>
+        </Head>
         {JSON.stringify(singlePost) !== '{}'&&
         <>
         <PageHeader

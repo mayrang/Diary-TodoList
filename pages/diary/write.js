@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ADD_DIARY_POST_REQUEST } from '../../reducers/diary';
 import {useDispatch, useSelector} from 'react-redux';
+import Head from 'next/head';
 
 const whetherTags = [
     {whether: 'Sunny', color: 'red'},
@@ -59,6 +60,11 @@ const DiaryWrite = () => {
 
     return (
         <>
+        <Head>
+            <title>
+                오늘은 어땠나요?
+            </title>
+        </Head>
         <PageHeader
         title="오늘의 일기"
         onBack={clickBack}

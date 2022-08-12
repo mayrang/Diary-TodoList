@@ -118,6 +118,8 @@ const reducer = (state=initialState, action) => {
             case LOAD_DIARY_POSTS_SUCCESS:
                 draft.loadDiaryPostsLoading = false;
                 draft.loadDiaryPostsDone = true;
+                draft.addDiaryPostDone = false;
+                draft.removeDiaryPostDone = false;
                 draft.diaryPosts = action.data;
                 break;
             case LOAD_DIARY_POSTS_FAILURE:
