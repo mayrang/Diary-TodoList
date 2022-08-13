@@ -41,6 +41,11 @@ export const dummyTodoList = [
         todoDate: "2022-08-25",
         todoContent: "08월 25일 todo"
     },
+    {
+        id: 7,
+        todoDate: "2022-08-12",
+        todoContent: "Dday!!!"
+    }
 ]
 
 export const LOAD_TODO_POSTS_REQUEST = "LOAD_TODO_POSTS_REQUEST";
