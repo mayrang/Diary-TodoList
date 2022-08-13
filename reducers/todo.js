@@ -14,31 +14,33 @@ export const dummyTodoList = [
         todoDate: "2022-08-15",
         todoContent: "광복절 todo"
     },
+   
     {
         id: 2,
-        todoDate: "2022-08-17",
-        todoContent: "08월 17일 todo"
-    },
-    {
-        id: 3,
         todoDate: "2022-08-20",
         todoContent: "08월 20일 todo"
     },
     {
-        id: 4,
-        todoDate: "2022-08-25",
-        todoContent: "08월 25일 todo"
+        id: 3,
+        todoDate: "2022-08-17",
+        todoContent: "08월 17일 todo"
     },
+   
     {
-        id: 5,
+        id: 4,
         todoDate: "2022-08-25",
         todoContent: "08월 25일 todo2"
     },
     {
-        id: 6,
+        id: 5,
         todoDate: "2022-09-13",
         todoContent: "09월 13일 todo"
-    }
+    },
+    {
+        id: 6,
+        todoDate: "2022-08-25",
+        todoContent: "08월 25일 todo"
+    },
 ]
 
 export const LOAD_TODO_POSTS_REQUEST = "LOAD_TODO_POSTS_REQUEST";
@@ -56,6 +58,7 @@ const reducer = (state = initialState, action) => {
             case LOAD_TODO_POSTS_SUCCESS:
                 draft.loadTodoPostsLoading = false;
                 draft.loadTodoPostsDone = true;
+                draft.todoPosts = action.data;
                 break;
             case LOAD_TODO_POSTS_FAILURE:
                 draft.loadTodoPostsError = action.error;

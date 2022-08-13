@@ -24,9 +24,9 @@ const Home = () => {
         const copyPosts = [...diaryPosts]
         console.log(sorted)
         if(sorted === 'latest'){
-            setSortedPosts(copyPosts.sort((a, b) => parseInt(b.diaryDate.slice(-2)) - parseInt(a.diaryDate.slice(-2))));
+            setSortedPosts(copyPosts.sort((a, b) => parseInt(b.diaryDate.split('-').join('')) - parseInt(a.diaryDate.split('-').join(''))));
         }else{
-            setSortedPosts(copyPosts.sort((a, b) => parseInt(a.diaryDate.slice(-2)) - parseInt(b.diaryDate.slice(-2))));
+            setSortedPosts(copyPosts.sort((a, b) => parseInt(a.diaryDate.split('-').join('')) - parseInt(b.diaryDate.split('-').join(''))));
         }
     }, [sorted, diaryPosts])
 
