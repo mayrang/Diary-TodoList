@@ -1,16 +1,19 @@
-import { Button, Card, Col, Collapse } from 'antd';
+import { Button, Card, Collapse } from 'antd';
 import moment from 'moment';
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import HeaderLayout from '../components/HeaderLayout';
-import { LOAD_TODO_POSTS_REQUEST } from '../reducers/todo';
+import HeaderLayout from '../../components/HeaderLayout';
+import { LOAD_TODO_POSTS_REQUEST } from '../../reducers/todo';
 
 
 const TodoList = () => {
     const dispatch = useDispatch();
     const {todoPosts} = useSelector((state) => state.todo);
     const [sortedPosts, setSortedPosts] = useState([]);
+    const [collapse, setCollapse] = useState([]);
+    const router = useRouter()
 
     useEffect(() => {
         dispatch({
@@ -32,12 +35,13 @@ const TodoList = () => {
                 }
             }
             setSortedPosts(finalPosts);
+            setCollapse(finalPosts.map((it) => it.todoDate))
         }
     }, [todoPosts]);
 
-    useEffect(() => {
-        console.log(sortedPosts)
-    }, [sortedPosts])
+    const clickWrite = useCallback(() => {
+        router.push('/todo/write')
+    }, [])
 
     return (
         <>
@@ -47,10 +51,12 @@ const TodoList = () => {
             </title>
         </Head>
         <HeaderLayout
-        extra={[<Button key="write" type='primary'>추가하기</Button>]}
+        extra={[<Button key="write" type='primary' onClick={clickWrite}>추가하기</Button>]}
         title={"Todo"}
         />
-        <Collapse
+        {sortedPosts&&<Collapse
+            activeKey={collapse}
+            onChange={setCollapse}
             ghost
         >
             {sortedPosts.map((it) => (
@@ -60,6 +66,7 @@ const TodoList = () => {
                 >
                     {it.posts.map((it) => (
                         <Card
+                            style={{marginTop: "10px"}}
                             key={it.id}
                             title={it.todoDate}
                         >
@@ -68,7 +75,7 @@ const TodoList = () => {
                     ))}
                 </Collapse.Panel>
             ))}
-        </Collapse>
+        </Collapse>}
         </>
     );
 };

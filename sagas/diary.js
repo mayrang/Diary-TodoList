@@ -106,13 +106,11 @@ function* watchRemoveDiaryPost(){
 
 function* removeDiaryPost(action){
     try{
-        console.log(123)
         const loacalData = localStorage.getItem("Diary");
         const jsonLocalData = JSON.parse(loacalData);
         const findData = jsonLocalData.find((it) => it.id === parseInt(action.id));
         if(findData){
             const filteredData = jsonLocalData.filter((it) => it.id !== parseInt(action.id));
-            console.log(filteredData)
             localStorage.setItem("Diary", JSON.stringify(filteredData));
             yield put({
                 type: REMOVE_DIARY_POST_SUCCESS,

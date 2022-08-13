@@ -5,7 +5,9 @@ const initialState = {
     loadTodoPostsLoading: false,
     loadTodoPostsDone: false,
     loadTodoPostsError: null,
-
+    addTodoPostLoading: false,
+    addTodoPostDone: false,
+    addTodoPostError: null,
 }
 
 export const dummyTodoList = [
@@ -43,7 +45,7 @@ export const dummyTodoList = [
     },
     {
         id: 7,
-        todoDate: "2022-08-12",
+        todoDate: "2022-08-13",
         todoContent: "Dday!!!"
     }
 ]
@@ -51,6 +53,10 @@ export const dummyTodoList = [
 export const LOAD_TODO_POSTS_REQUEST = "LOAD_TODO_POSTS_REQUEST";
 export const LOAD_TODO_POSTS_SUCCESS = "LOAD_TODO_POSTS_SUCCESS";
 export const LOAD_TODO_POSTS_FAILURE = "LOAD_TODO_POSTS_FAILURE";
+export const ADD_TODO_POST_REQUEST = "ADD_TODO_POST_REQUEST";
+export const ADD_TODO_POST_SUCCESS = "ADD_TODO_POST_SUCCESS";
+export const ADD_TODO_POST_FAILURE = "ADD_TODO_POST_FAILURE";
+
 
 const reducer = (state = initialState, action) => {
     return produce(state, (draft => {
@@ -63,11 +69,25 @@ const reducer = (state = initialState, action) => {
             case LOAD_TODO_POSTS_SUCCESS:
                 draft.loadTodoPostsLoading = false;
                 draft.loadTodoPostsDone = true;
+                draft.addTodoPostDone = false;
                 draft.todoPosts = action.data;
                 break;
             case LOAD_TODO_POSTS_FAILURE:
                 draft.loadTodoPostsError = action.error;
                 draft.loadTodoPostsLoading = false;
+                break;
+            case ADD_TODO_POST_REQUEST:
+                draft.addTodoPostLoading = true;
+                draft.addTodoPostDone = false;
+                draft.addTodoPostError = null;
+                break;
+            case ADD_TODO_POST_SUCCESS:
+                draft.addTodoPostDone = true;
+                draft.addTodoPostLoading = false;
+                break;
+            case ADD_TODO_POST_FAILURE:
+                draft.addTodoPostLoading = false;
+                draft.addTodoPostError = action.error;
                 break;
             default:
                 break;
