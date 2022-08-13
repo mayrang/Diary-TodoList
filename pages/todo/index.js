@@ -5,12 +5,12 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import HeaderLayout from '../../components/HeaderLayout';
-import { LOAD_TODO_POSTS_REQUEST } from '../../reducers/todo';
+import { LOAD_TODO_POSTS_REQUEST, REMOVE_TODO_POST_REQUEST } from '../../reducers/todo';
 
 
 const TodoList = () => {
     const dispatch = useDispatch();
-    const {todoPosts} = useSelector((state) => state.todo);
+    const {todoPosts, removeTodoPostDone} = useSelector((state) => state.todo);
     const [sortedPosts, setSortedPosts] = useState([]);
     const [collapse, setCollapse] = useState([]);
     const router = useRouter()
@@ -20,6 +20,14 @@ const TodoList = () => {
             type: LOAD_TODO_POSTS_REQUEST
         })    
     }, []);
+
+    useEffect(() => {
+        if(removeTodoPostDone){
+            dispatch({
+                type: LOAD_TODO_POSTS_REQUEST
+            });
+        }
+    }, [removeTodoPostDone]);
 
     useEffect(() => {
         if(todoPosts.length > 0){
@@ -41,7 +49,14 @@ const TodoList = () => {
 
     const clickWrite = useCallback(() => {
         router.push('/todo/write')
-    }, [])
+    }, []);
+
+    const removeTodo = useCallback((id) => {
+        dispatch({
+            type: REMOVE_TODO_POST_REQUEST,
+            id: id
+        });
+    }, []);
 
     return (
         <>
@@ -69,6 +84,7 @@ const TodoList = () => {
                             style={{marginTop: "10px"}}
                             key={it.id}
                             title={it.todoDate}
+                            extra={[<Button key="remove" onClick={() => removeTodo(it.id)} type="primary">완료</Button>]}
                         >
                             {it.todoContent}
                         </Card>

@@ -8,6 +8,9 @@ const initialState = {
     addTodoPostLoading: false,
     addTodoPostDone: false,
     addTodoPostError: null,
+    removeTodoPostLoading: false,
+    removeTodoPostDone: false,
+    removeTodoPostError: null,
 }
 
 export const dummyTodoList = [
@@ -56,6 +59,9 @@ export const LOAD_TODO_POSTS_FAILURE = "LOAD_TODO_POSTS_FAILURE";
 export const ADD_TODO_POST_REQUEST = "ADD_TODO_POST_REQUEST";
 export const ADD_TODO_POST_SUCCESS = "ADD_TODO_POST_SUCCESS";
 export const ADD_TODO_POST_FAILURE = "ADD_TODO_POST_FAILURE";
+export const REMOVE_TODO_POST_REQUEST = "REMOVE_TODO_POST_REQUEST";
+export const REMOVE_TODO_POST_SUCCESS = "REMOVE_TODO_POST_SUCCESS";
+export const REMOVE_TODO_POST_FAILURE = "REMOVE_TODO_POST_FAILURE";
 
 
 const reducer = (state = initialState, action) => {
@@ -70,6 +76,7 @@ const reducer = (state = initialState, action) => {
                 draft.loadTodoPostsLoading = false;
                 draft.loadTodoPostsDone = true;
                 draft.addTodoPostDone = false;
+                draft.removeTodoPostDone = false;
                 draft.todoPosts = action.data;
                 break;
             case LOAD_TODO_POSTS_FAILURE:
@@ -88,6 +95,20 @@ const reducer = (state = initialState, action) => {
             case ADD_TODO_POST_FAILURE:
                 draft.addTodoPostLoading = false;
                 draft.addTodoPostError = action.error;
+                break;
+            case REMOVE_TODO_POST_REQUEST:
+                draft.removeTodoPostLoading = true;
+                draft.removeTodoPostDone = false;
+                draft.removeTodoPostError = null;
+                break;
+            case REMOVE_TODO_POST_SUCCESS:
+                draft.removeTodoPostLoading = false;
+                draft.removeTodoPostDone = true;
+                draft.todoPosts = action.data;
+                break;
+            case REMOVE_TODO_POST_FAILURE:
+                draft.removeTodoPostLoading = false;
+                draft.removeTodoPostError = action.error;
                 break;
             default:
                 break;

@@ -1,6 +1,6 @@
 import moment from "moment";
 import {all, fork, takeLatest, put} from "redux-saga/effects";
-import { ADD_TODO_POST_FAILURE, ADD_TODO_POST_REQUEST, ADD_TODO_POST_SUCCESS, LOAD_TODO_POSTS_FAILURE, LOAD_TODO_POSTS_REQUEST, LOAD_TODO_POSTS_SUCCESS } from "../reducers/todo";
+import { ADD_TODO_POST_FAILURE, ADD_TODO_POST_REQUEST, ADD_TODO_POST_SUCCESS, LOAD_TODO_POSTS_FAILURE, LOAD_TODO_POSTS_REQUEST, LOAD_TODO_POSTS_SUCCESS, REMOVE_TODO_POST_FAILURE, REMOVE_TODO_POST_REQUEST, REMOVE_TODO_POST_SUCCESS } from "../reducers/todo";
 
 
 function* watchLoadTodoPosts(){
@@ -58,7 +58,40 @@ function* addTodoPost(action){
         yield put({
             type: ADD_TODO_POST_FAILURE,
             error: err.message
-        })
+        });
+    }
+}
+
+
+function* watchRemoveTodoPost(){
+    yield takeLatest(REMOVE_TODO_POST_REQUEST, removeTodoPost);
+}
+
+function* removeTodoPost(action){
+    try{
+        const localData = localStorage.getItem("Todo");
+        const jsonLocalData = JSON.parse(localData);
+        if(jsonLocalData&&jsonLocalData.length > 0){
+            const checkPost = jsonLocalData.find((it) => it.id === parseInt(action.id));
+            if(checkPost){
+                const finalPosts = jsonLocalData.filter((it) => it.id !== parseInt(action.id));
+                localStorage.setItem("Todo", JSON.stringify(finalPosts));
+                yield put({
+                    type: REMOVE_TODO_POST_SUCCESS,
+                    data: finalPosts,
+                })
+            }else{
+                throw new Error("해당하는 게시글을 찾을 수 없습니다.")
+            }
+        }else{
+            throw new Error("게시글 목록을 불러오지 못했습니다.")
+        }
+    }catch(err){
+        console.error(err);
+        yield put({
+            type: REMOVE_TODO_POST_FAILURE,
+            error: err.message
+        });
     }
 }
 
@@ -66,5 +99,6 @@ export default function* todoSaga(){
     yield all([
         fork(watchLoadTodoPosts),
         fork(watchAddTodoPost),
+        fork(watchRemoveTodoPost)
     ])
 }
